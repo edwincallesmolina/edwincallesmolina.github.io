@@ -10859,6 +10859,20 @@ L 320.855859 184.753625
     });
   }
   window.addEventListener('load', tidy); setTimeout(tidy, 1500); setTimeout(tidy, 4000);
+
+  // Anchor links land under the sticky header unless the offset tracks its real height.
+  // The header wraps to two rows on narrow screens, so a fixed scroll-padding-top is wrong there.
+  var bar = document.querySelector('.topbar');
+  function offset(){
+    if (!bar) return;
+    // below 560px the header is static, so it takes no space off the top of the viewport
+    var p = getComputedStyle(bar).position;
+    var h = (p === 'sticky' || p === 'fixed') ? bar.getBoundingClientRect().height : 0;
+    document.documentElement.style.scrollPaddingTop = Math.round(h + 18) + 'px';
+  }
+  offset();
+  window.addEventListener('resize', offset);
+  window.addEventListener('load', offset);
 })();
 </script>
 </body>
